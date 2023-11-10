@@ -10,6 +10,7 @@ let screenText = document.getElementById('onScreenText');
 let operator = '';
 let firstNumber = 0;
 let secondNumber = 0;
+let result = null;
 
 numberBtns.forEach((button) => {
     button.addEventListener('click', () => writeNumber(button.textContent));
@@ -24,7 +25,13 @@ equalBtn.addEventListener('click', () => checkData())
 acBtn.addEventListener('click', () => resetScreen());
 
 function writeNumber(number) {
-    screenText.textContent += number;
+    if(result === null) {
+        screenText.textContent += number;
+    } else {
+        screenText.textContent = '';
+        screenText.textContent += number;
+        result = null;
+    }
     if (operator === '') {
         firstNumber += number;
     } else {
@@ -33,10 +40,13 @@ function writeNumber(number) {
 }
 
 function setOperation(newOperator) {
-    screenText.textContent = '';
-    operator = newOperator;
-    if(secondNumber !== '') {
+    if(secondNumber === ''){
+        screenText.textContent = '';
+        operator = newOperator;
+    } else {
         checkData();
+        operator = newOperator;
+        firstNumber = result;
     }
 }
 
@@ -48,13 +58,17 @@ function checkData() {
 
 function operate(){
     if(operator === '+'){
-        screenText.textContent = add(Number(firstNumber), Number(secondNumber));
+        result = add(Number(firstNumber), Number(secondNumber));
+        screenText.textContent = result;
     } else if(operator === '-'){
-        screenText.textContent = subtract(Number(firstNumber), Number(secondNumber));
+        result = subtract(Number(firstNumber), Number(secondNumber));
+        screenText.textContent = result;
     } else if(operator === 'X'){
-        screenText.textContent = multiply(Number(firstNumber), Number(secondNumber));
+        result = multiply(Number(firstNumber), Number(secondNumber));
+        screenText.textContent = result;
     } else if(operator === '/'){
-        screenText.textContent = divide(Number(firstNumber), Number(secondNumber));
+        result = divide(Number(firstNumber), Number(secondNumber));
+        screenText.textContent = result;
     }
     firstNumber = Number(screenText.textContent);
     secondNumber = '';
@@ -83,4 +97,5 @@ function resetScreen() {
     secondNumber = '';
     secondNumberCache = 0;
     operator = '';
+    result = null;
 }
